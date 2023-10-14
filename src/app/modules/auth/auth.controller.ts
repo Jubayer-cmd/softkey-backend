@@ -11,7 +11,6 @@ import { authService } from "./auth.service";
 const createUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { ...userData } = req.body;
-
     const result = await authService.createUserService(userData);
     let dataWithoutPass;
     if (result) {

@@ -4,8 +4,9 @@ import { Secret } from "jsonwebtoken";
 import { User } from "@prisma/client";
 
 import httpStatus from "http-status";
-import config from "../../../config";
+import config from "../../../config/envConfig";
 import ApiError from "../../../errors/ApiError";
+
 import { jwtHelpers } from "../../../utils/jwtHelpers";
 import prisma from "../../../utils/prisma";
 import {
@@ -16,12 +17,12 @@ import {
 
 // creating user
 const createUserService = async (user: User): Promise<User | null> => {
+  console.log("wooooooooooooooooow", user);
   const hashedPassword = await bcrypt.hash(
     user?.password,
     Number(config.bycrypt_salt_rounds)
   );
   user.password = hashedPassword;
-
   const result = await prisma.user.create({
     data: user,
   });

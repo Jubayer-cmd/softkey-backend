@@ -1,6 +1,6 @@
 import { Server } from "http";
 import app from "./app";
-import config from "./config";
+import config from "./config/envConfig";
 
 async function bootstrap() {
   const server: Server = app.listen(config.port, () => {
