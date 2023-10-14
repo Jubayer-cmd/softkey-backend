@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,21 +8,100 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   name      String
-  email     String   @unique
+  email     String       @unique
   password  String
-  role      Role?    @default(user)
+  image     String?
+  role      Role?        @default(user)
   contactNo String
   address   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  reviews   UserReview[] // Reviews written by the user
+  orders    Order[] // Orders placed by the user
 
   @@map("user")
+}
+
+model Service {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  price       Float
+  UserReview  UserReview[] // Establish the relationship with user reviews.
+
+  @@map("service")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  products    Product[] // Products belonging to the category
+
+  @@map("category")
+}
+
+model Product {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  price       Float
+  Category    Category?    @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  UserReview  UserReview[] // Establish the relationship with user reviews.
+  Order       Order?       @relation(fields: [orderId], references: [id])
+  orderId     String?
+  stock       Boolean
+  quantity    Int
+  saleCount   Int
+
+  @@map("product")
+}
+
+model UserReview {
+  id        String   @id @default(uuid())
+  rating    Int
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("user_review")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  orderDate   DateTime
+  totalAmount Float
+  status      OrderStatus
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  products    Product[]
+
+  @@map("order")
 }
 
 enum Role {
   superadmin
   admin
   user
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  shipped
+  delivered
+  canceled
 }

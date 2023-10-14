@@ -17,7 +17,6 @@ import {
 
 // creating user
 const createUserService = async (user: User): Promise<User | null> => {
-  console.log("wooooooooooooooooow", user);
   const hashedPassword = await bcrypt.hash(
     user?.password,
     Number(config.bycrypt_salt_rounds)
