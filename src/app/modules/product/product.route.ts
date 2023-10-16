@@ -11,7 +11,7 @@ router.post(
   productController.insertIntoDB
 );
 router.get("/products", productController.getproducts);
-router.get("/products/:id", productController.getUserById);
+router.get("/products/:id", productController.getProductById);
 router.get(
   "/products/:categoryId/category",
   productController.getproductsbyCategory

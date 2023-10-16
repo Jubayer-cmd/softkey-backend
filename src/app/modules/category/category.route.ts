@@ -1,25 +1,21 @@
 import express from "express";
-import { ENUM_USER_ROLE } from "../../../interface/common";
-import auth from "../../middleware/auth";
+import validateRequest from "../../middleware/validateRequest";
 import { categoryController } from "./category.controller";
+import { CategoryValidation } from "./category.validation";
 
 const router = express.Router();
 
 router.post(
   "/categories/create-category",
-  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.createCategory),
   categoryController.insertIntoDB
 );
 router.get("/categories", categoryController.getAllFromDb);
 router.get("/categories/:id", categoryController.getUserById);
-router.delete(
-  "/categories/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  categoryController.deleteFromDB
-);
+router.delete("/categories/:id", categoryController.deleteFromDB);
 router.patch(
   "/categories/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.updateCategory),
   categoryController.updateIntoDB
 );
 

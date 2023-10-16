@@ -54,7 +54,7 @@ const getproductsbyCategory: RequestHandler = catchAsync(
   }
 );
 
-const getUserById = catchAsync(async (req: Request, res: Response) => {
+const getProductById = catchAsync(async (req: Request, res: Response) => {
   const result = await productService.getProductById(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -86,7 +86,7 @@ const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
 
 export const productController = {
   insertIntoDB,
-  getUserById,
+  getProductById,
   updateIntoDB,
   deleteFromDB,
   getproducts,
