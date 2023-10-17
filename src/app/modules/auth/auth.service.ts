@@ -54,6 +54,7 @@ const loginUserService = async (
   payload: ILoginUser
 ): Promise<ILoginUserResponse> => {
   const { email, password } = payload;
+  console.log("loging try");
   const isUserExist = await getByEmailFromDB(payload?.email);
   if (!isUserExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, "User does not exist");
@@ -69,7 +70,7 @@ const loginUserService = async (
   //create access token & refresh token
 
   const { id: userId, role } = isUserExist;
-  const token = jwtHelpers.createToken(
+  const accessToken = jwtHelpers.createToken(
     { userId, role, email },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
@@ -80,9 +81,8 @@ const loginUserService = async (
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
-
   return {
-    token,
+    accessToken,
     refreshToken,
   };
 };

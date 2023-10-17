@@ -3,7 +3,7 @@ export type ILoginUser = {
   password: string;
 };
 export type ILoginUserResponse = {
-  token?: string;
+  accessToken?: string;
   refreshToken?: string;
 };
 export type IRefreshTokenResponse = {

@@ -30,7 +30,7 @@ const loginUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { ...userData } = req.body;
     const result = await authService.loginUserService(userData);
-    const { refreshToken, token } = result;
+    const { refreshToken, ...others } = result;
     // set refresh token into cookie
 
     const cookieOptions = {
@@ -44,7 +44,7 @@ const loginUser: RequestHandler = catchAsync(
       success: true,
       statusCode: 200,
       message: "User signin successfully!",
-      token: token,
+      data: others,
     });
   }
 );
