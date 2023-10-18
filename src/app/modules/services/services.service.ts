@@ -1,14 +1,5 @@
-import { Prisma, Service } from "@prisma/client";
-import { IGenericResponse } from "../../../interface/common";
-import { IPaginationOptions } from "../../../interface/pagination";
-import { paginationHelpers } from "../../../utils/paginationHelper";
+import { Service } from "@prisma/client";
 import prisma from "../../../utils/prisma";
-import {
-  IServiceFilterRequest,
-  serviceRelationalFields,
-  serviceRelationalFieldsMapper,
-  serviceSearchableFields,
-} from "./service.constant";
 
 const insertIntoDB = async (data: Service): Promise<Service> => {
   const result = await prisma.service.create({
@@ -17,95 +8,84 @@ const insertIntoDB = async (data: Service): Promise<Service> => {
   return result;
 };
 
-const getAllservices = async (
-  filters: IServiceFilterRequest,
-  options: IPaginationOptions
-): Promise<IGenericResponse<Service[]>> => {
-  const { limit, page, skip, sortBy, sortOrder } =
-    paginationHelpers.calculatePagination(options);
-  const { search, maxPrice, minPrice, ...filterData } = filters; // Removed 'category' from filters
+// const getAllservices = async (
+//   filters: IServiceFilterRequest,
+//   options: IPaginationOptions
+// ): Promise<IGenericResponse<Service[]>> => {
+//   const { limit, page, skip, sortBy, sortOrder } =
+//     paginationHelpers.calculatePagination(options);
+//   const { search, ...filterData } = filters; // Removed 'category' from filters
 
-  const andConditions = [];
+//   const andConditions = [];
 
-  if (search) {
-    andConditions.push({
-      OR: serviceSearchableFields.map((field) => ({
-        [field]: {
-          contains: search,
-          mode: "insensitive",
-        },
-      })),
-    });
-  }
+//   if (search) {
+//     andConditions.push({
+//       OR: serviceSearchableFields.map((field) => ({
+//         [field]: {
+//           contains: search,
+//           mode: "insensitive",
+//         },
+//       })),
+//     });
+//   }
 
-  if (minPrice !== undefined) {
-    andConditions.push({
-      price: {
-        gte: parseFloat(minPrice.toString()),
-      },
-    });
-  }
+//   if (Object.keys(filterData).length > 0) {
+//     andConditions.push({
+//       AND: Object.keys(filterData).map((key) => {
+//         if (serviceRelationalFields.includes(key)) {
+//           return {
+//             [serviceRelationalFieldsMapper[key]]: {
+//               id: (filterData as any)[key],
+//             },
+//           };
+//         } else if (serviceSearchableFields.includes(key)) {
+//           return {
+//             [key]: {
+//               contains: (filterData as any)[key],
+//               mode: "insensitive",
+//             },
+//           };
+//         } else {
+//           return {
+//             [key]: {
+//               equals: (filterData as any)[key],
+//             },
+//           };
+//         }
+//       }),
+//     });
+//   }
 
-  if (maxPrice !== undefined) {
-    andConditions.push({
-      price: {
-        lte: parseFloat(maxPrice.toString()),
-      },
-    });
-  }
+//   const whereConditions: Prisma.ServiceWhereInput =
+//     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map((key) => {
-        if (serviceRelationalFields.includes(key)) {
-          return {
-            [serviceRelationalFieldsMapper[key]]: {
-              id: (filterData as any)[key],
-            },
-          };
-        } else if (serviceSearchableFields.includes(key)) {
-          return {
-            [key]: {
-              contains: (filterData as any)[key],
-              mode: "insensitive",
-            },
-          };
-        } else {
-          return {
-            [key]: {
-              equals: (filterData as any)[key],
-            },
-          };
-        }
-      }),
-    });
-  }
+//   const result = await prisma.service.findMany({
+//     skip,
+//     take: Number(limit),
+//     orderBy: {
+//       [sortBy]: sortOrder,
+//     },
+//     where: whereConditions,
+//   });
 
-  const whereConditions: Prisma.ServiceWhereInput =
-    andConditions.length > 0 ? { AND: andConditions } : {};
+//   const total = await prisma.service.count({
+//     where: whereConditions,
+//   });
+//   const totalPages = Math.ceil(total / Number(limit));
+//   return {
+//     meta: {
+//       total,
+//       page,
+//       limit,
+//       totalPages,
+//     },
+//     data: result,
+//   };
+// };
 
-  const result = await prisma.service.findMany({
-    skip,
-    take: Number(limit),
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
-    where: whereConditions,
-  });
-
-  const total = await prisma.service.count({
-    where: whereConditions,
-  });
-  const totalPages = Math.ceil(total / Number(limit));
-  return {
-    meta: {
-      total,
-      page,
-      limit,
-      totalPages,
-    },
-    data: result,
-  };
+const getAllservices = async (): Promise<Service[]> => {
+  const result = await prisma.service.findMany();
+  return result;
 };
 
 // const getAllservices = async (

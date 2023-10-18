@@ -2,9 +2,7 @@ import { Service } from "@prisma/client";
 import { Request, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
-import pick from "../../../utils/pick";
 import sendResponse from "../../../utils/sendResponse";
-import { serviceFilterableFields } from "./service.constant";
 import { serviceService } from "./services.service";
 
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
@@ -20,17 +18,12 @@ const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
 // get all services
 const getservices: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-    const filters = pick(req.query, serviceFilterableFields);
-
-    const result = await serviceService.getAllservices(filters, options);
-
+    const result = await serviceService.getAllservices();
     sendResponse<Service[]>(res, {
       statusCode: 200,
       success: true,
       message: "services fetched successfully",
-      meta: result.meta,
-      data: result.data,
+      data: result,
     });
   }
 );

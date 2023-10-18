@@ -30,7 +30,6 @@ model Service {
   name        String
   description String?
   image       String?
-  price       Float
   UserReview  UserReview[] // Establish the relationship with user reviews.
 
   @@map("service")
