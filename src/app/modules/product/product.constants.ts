@@ -1,17 +1,17 @@
 export const productFilterableFields: string[] = [
-  "search",
+  "searchTerm",
   "minPrice",
   "maxPrice",
   "category",
 ];
 
-export const productSearchableFields: string[] = ["title", "author", "genre"];
+export const productSearchableFields: string[] = ["name", "description"];
 export const productRelationalFields: string[] = ["categoryId"];
 export const productRelationalFieldsMapper: { [key: string]: string } = {
   categoryId: "category",
 };
 export type IProductFilterRequest = {
-  search?: string | undefined;
+  searchTerm?: string | undefined;
   minPrice?: number;
   maxPrice?: number;
   category?: string;

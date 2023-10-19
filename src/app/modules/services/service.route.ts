@@ -5,11 +5,7 @@ import { serviceController } from "./service.controller";
 
 const router = express.Router();
 
-router.post(
-  "/services/create-service",
-  auth(ENUM_USER_ROLE.ADMIN),
-  serviceController.insertIntoDB
-);
+router.post("/services/create-service", serviceController.insertIntoDB);
 router.get("/services", serviceController.getservices);
 router.get("/services/:id", serviceController.getUserById);
 

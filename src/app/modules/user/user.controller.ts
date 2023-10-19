@@ -2,16 +2,21 @@ import { User } from "@prisma/client";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
+import pick from "../../../utils/pick";
 import sendResponse from "../../../utils/sendResponse";
+import { userFilterableFields } from "./user.interface";
 import { userService } from "./user.service";
 
-const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.getAllFromDb();
+const getAllUser = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await userService.getAllUser(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User fetched successfully",
-    data: result,
+    message: "Users retrieved successfully",
+    meta: result.meta,
+    data: result.data,
   });
 });
 
@@ -36,6 +41,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.params.id, req.body);
   const result = await userService.updateIntoDB(req.params.id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,7 +64,7 @@ const getProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const userController = {
-  getAllFromDb,
+  getAllUser,
   getUserById,
   updateIntoDB,
   deleteFromDB,

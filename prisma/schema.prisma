@@ -21,6 +21,7 @@ model User {
   reviews   UserReview[] // Reviews written by the user
   orders    Order[] // Orders placed by the user
   Blog      Blog[]
+  Booking   Booking[]
 
   @@map("user")
 }
@@ -31,6 +32,9 @@ model Service {
   description String?
   image       String?
   UserReview  UserReview[] // Establish the relationship with user reviews.
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Booking     Booking[]
 
   @@map("service")
 }
@@ -40,24 +44,24 @@ model Category {
   name        String
   description String?
   products    Product[] // Products belonging to the category
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("category")
 }
 
 model Product {
-  id          String       @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String?
   image       String?
-  price       Float
-  Category    Category?    @relation(fields: [categoryId], references: [id])
+  price       Int
+  Category    Category? @relation(fields: [categoryId], references: [id])
   categoryId  String?
-  UserReview  UserReview[] // Establish the relationship with user reviews.
-  Order       Order?       @relation(fields: [orderId], references: [id])
-  orderId     String?
-  stock       Boolean
+  stock       String?
   quantity    Int
-  saleCount   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("product")
 }
@@ -70,8 +74,6 @@ model UserReview {
   updatedAt DateTime @updatedAt
   serviceId String
   service   Service  @relation(fields: [serviceId], references: [id])
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
@@ -87,19 +89,34 @@ model Order {
   updatedAt   DateTime    @updatedAt
   userId      String
   user        User        @relation(fields: [userId], references: [id])
-  products    Product[]
 
   @@map("order")
 }
 
+model Booking {
+  id        String        @id @default(uuid())
+  serviceId String
+  service   Service       @relation(fields: [serviceId], references: [id])
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  date      DateTime // The date and time of the appointment
+  status    BookingStatus // Status of the booking (e.g., confirmed, canceled, etc.)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("booking")
+}
+
 model Blog {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  title      String
+  content    String
+  image      String?
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
+  authorName String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("blog")
 }
@@ -116,4 +133,11 @@ enum OrderStatus {
   shipped
   delivered
   canceled
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  canceled
+  completed
 }

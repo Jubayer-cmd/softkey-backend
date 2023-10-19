@@ -5,19 +5,11 @@ import { blogsController } from "./blog.controller";
 
 const router = express.Router();
 
-router.post(
-  "/blogs/create-blogs",
-  auth(ENUM_USER_ROLE.ADMIN),
-  blogsController.insertIntoDB
-);
+router.post("/blogs/create-blogs", blogsController.insertIntoDB);
 router.get("/blogs", blogsController.getblogs);
 router.get("/blogs/:id", blogsController.getblogsById);
 
-router.delete(
-  "/blogs/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  blogsController.deleteFromDB
-);
+router.delete("/blogs/:id", blogsController.deleteFromDB);
 
 router.patch(
   "/blogs/:id",

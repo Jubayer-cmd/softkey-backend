@@ -21,44 +21,22 @@ const getAllProducts = async (
   filters: IProductFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Product[]>> => {
-  const { limit, page, skip, sortBy, sortOrder } =
-    paginationHelpers.calculatePagination(options);
-  const { search, maxPrice, minPrice, category, ...filterData } = filters;
+  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
 
   const andConditions = [];
 
-  if (search) {
+  if (searchTerm) {
     andConditions.push({
       OR: productSearchableFields.map((field) => ({
         [field]: {
-          contains: search,
+          contains: searchTerm,
           mode: "insensitive",
         },
       })),
     });
   }
 
-  if (minPrice !== undefined) {
-    andConditions.push({
-      price: {
-        gte: parseFloat(minPrice.toString()),
-      },
-    });
-  }
-
-  if (maxPrice !== undefined) {
-    andConditions.push({
-      price: {
-        lte: parseFloat(maxPrice.toString()),
-      },
-    });
-  }
-
-  if (category) {
-    andConditions.push({
-      categoryId: category,
-    });
-  }
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map((key) => {
@@ -66,13 +44,6 @@ const getAllProducts = async (
           return {
             [productRelationalFieldsMapper[key]]: {
               id: (filterData as any)[key],
-            },
-          };
-        } else if (productSearchableFields.includes(key)) {
-          return {
-            [key]: {
-              contains: (filterData as any)[key],
-              mode: "insensitive",
             },
           };
         } else {
@@ -93,29 +64,29 @@ const getAllProducts = async (
     include: {
       Category: true,
     },
-    skip,
-    take: Number(limit),
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
     where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+            createdAt: "desc",
+          },
   });
-
   const total = await prisma.product.count({
     where: whereConditions,
   });
-  const totalPages = Math.ceil(total / Number(limit));
+
   return {
     meta: {
       total,
       page,
       limit,
-      totalPages,
     },
     data: result,
   };
 };
-
 // get by category
 const getProductsbyCategoryService = async (
   id: string,

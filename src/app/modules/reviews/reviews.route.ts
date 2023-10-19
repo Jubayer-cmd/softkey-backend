@@ -5,11 +5,7 @@ import { reviewsController } from "./reviews.controller";
 
 const router = express.Router();
 
-router.post(
-  "/reviews/create-reviews",
-  auth(ENUM_USER_ROLE.ADMIN),
-  reviewsController.insertIntoDB
-);
+router.post("/reviews/create-reviews", reviewsController.insertIntoDB);
 router.get("/reviews", reviewsController.getreviews);
 router.get("/reviews/:id", reviewsController.getreviewsById);
 

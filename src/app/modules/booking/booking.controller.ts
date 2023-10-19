@@ -1,73 +1,68 @@
-import { UserReview } from "@prisma/client";
+import { Booking } from "@prisma/client";
 import { Request, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
-import { reviewservice } from "./reviews.service";
+import { BookingService } from "./booking.service";
 
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
-  const rating = parseFloat(req.body.rating);
-  console.log(rating);
-  const result = await reviewservice.insertIntoDB({
-    ...req.body,
-    rating,
-  });
+  const result = await BookingService.insertIntoDB(req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "reviews created successfully",
+    message: "Bookings created successfully",
     data: result,
   });
 });
 
-// get all reviews
-const getreviews: RequestHandler = catchAsync(
+// get all Bookings
+const getBookings: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await reviewservice.getAllFromDb();
+    const result = await BookingService.getAllFromDb();
 
-    sendResponse<UserReview[]>(res, {
+    sendResponse<Booking[]>(res, {
       statusCode: 200,
       success: true,
-      message: "reviews fetched successfully",
+      message: "Bookings fetched successfully",
       data: result,
     });
   }
 );
 
-const getreviewsById = catchAsync(async (req: Request, res: Response) => {
-  const result = await reviewservice.getreviewsById(req.params.id);
+const getBookingsById = catchAsync(async (req: Request, res: Response) => {
+  const result = await BookingService.getBookingsById(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "reviews fetched successfully",
+    message: "Bookings fetched successfully",
     data: result,
   });
 });
 
 const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
-  const result = await reviewservice.deleteFromDB(req.params.id);
+  const result = await BookingService.deleteFromDB(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "reviews deleted successfully",
+    message: "Bookings deleted successfully",
     data: result,
   });
 });
 
 const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
-  const result = await reviewservice.updateIntoDB(req.params.id, req.body);
+  const result = await BookingService.updateIntoDB(req.params.id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "reviews updated successfully",
+    message: "Bookings updated successfully",
     data: result,
   });
 });
 
-export const reviewsController = {
+export const BookingsController = {
   insertIntoDB,
-  getreviewsById,
+  getBookingsById,
   updateIntoDB,
   deleteFromDB,
-  getreviews,
+  getBookings,
 };

@@ -9,7 +9,12 @@ const insertIntoDB = async (data: UserReview): Promise<UserReview> => {
 };
 
 const getAllFromDb = async (): Promise<UserReview[]> => {
-  const result = await prisma.userReview.findMany();
+  // Use Prisma to fetch UserReview records and include the related user information
+  const result = await prisma.userReview.findMany({
+    include: {
+      user: true, // This includes the related user information
+    },
+  });
   return result;
 };
 

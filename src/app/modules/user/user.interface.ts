@@ -11,5 +11,14 @@ export type User = {
 
 enum Role {
   admin = "admin",
-  customer = "customer",
+  user = "user",
+  superAdmin = "superAdmin",
 }
+
+export const userFilterableFields: string[] = ["searchTerm", "email", "role"];
+export const userSearchableFields: string[] = ["name", "email"];
+export type IUserFilterRequest = {
+  searchTerm?: string | undefined;
+  email?: string | undefined;
+  role?: Role | undefined;
+};

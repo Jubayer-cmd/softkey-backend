@@ -1,7 +1,10 @@
 import express from "express";
 import { authRoutes } from "../modules/auth/auth.route";
 import { blogsRoutes } from "../modules/blogs/blog.route";
+import { BookingRoutes } from "../modules/booking/booking.route";
 import { categoryRoutes } from "../modules/category/category.route";
+import { productRoutes } from "../modules/product/product.route";
+import { reviewsRoutes } from "../modules/reviews/reviews.route";
 import { serviceRoutes } from "../modules/services/service.route";
 import { userRoutes } from "../modules/user/user.routes";
 
@@ -27,6 +30,18 @@ const moduleRoutes = [
   {
     path: "/",
     route: serviceRoutes,
+  },
+  {
+    path: "/",
+    route: productRoutes,
+  },
+  {
+    path: "/",
+    route: reviewsRoutes,
+  },
+  {
+    path: "/",
+    route: BookingRoutes,
   },
 ];
 
