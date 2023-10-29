@@ -8,109 +8,89 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serviceService = void 0;
-const paginationHelper_1 = require("../../../utils/paginationHelper");
 const prisma_1 = __importDefault(require("../../../utils/prisma"));
-const service_constant_1 = require("./service.constant");
 const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.service.create({
         data,
     });
     return result;
 });
-const getAllservices = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit, page, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(options);
-    const { search, maxPrice, minPrice } = filters, filterData = __rest(filters, ["search", "maxPrice", "minPrice"]); // Removed 'category' from filters
-    const andConditions = [];
-    if (search) {
-        andConditions.push({
-            OR: service_constant_1.serviceSearchableFields.map((field) => ({
-                [field]: {
-                    contains: search,
-                    mode: "insensitive",
-                },
-            })),
-        });
-    }
-    if (minPrice !== undefined) {
-        andConditions.push({
-            price: {
-                gte: parseFloat(minPrice.toString()),
-            },
-        });
-    }
-    if (maxPrice !== undefined) {
-        andConditions.push({
-            price: {
-                lte: parseFloat(maxPrice.toString()),
-            },
-        });
-    }
-    if (Object.keys(filterData).length > 0) {
-        andConditions.push({
-            AND: Object.keys(filterData).map((key) => {
-                if (service_constant_1.serviceRelationalFields.includes(key)) {
-                    return {
-                        [service_constant_1.serviceRelationalFieldsMapper[key]]: {
-                            id: filterData[key],
-                        },
-                    };
-                }
-                else if (service_constant_1.serviceSearchableFields.includes(key)) {
-                    return {
-                        [key]: {
-                            contains: filterData[key],
-                            mode: "insensitive",
-                        },
-                    };
-                }
-                else {
-                    return {
-                        [key]: {
-                            equals: filterData[key],
-                        },
-                    };
-                }
-            }),
-        });
-    }
-    const whereConditions = andConditions.length > 0 ? { AND: andConditions } : {};
-    const result = yield prisma_1.default.service.findMany({
-        skip,
-        take: Number(limit),
-        orderBy: {
-            [sortBy]: sortOrder,
-        },
-        where: whereConditions,
-    });
-    const total = yield prisma_1.default.service.count({
-        where: whereConditions,
-    });
-    const totalPages = Math.ceil(total / Number(limit));
-    return {
-        meta: {
-            total,
-            page,
-            limit,
-            totalPages,
-        },
-        data: result,
-    };
+// const getAllservices = async (
+//   filters: IServiceFilterRequest,
+//   options: IPaginationOptions
+// ): Promise<IGenericResponse<Service[]>> => {
+//   const { limit, page, skip, sortBy, sortOrder } =
+//     paginationHelpers.calculatePagination(options);
+//   const { search, ...filterData } = filters; // Removed 'category' from filters
+//   const andConditions = [];
+//   if (search) {
+//     andConditions.push({
+//       OR: serviceSearchableFields.map((field) => ({
+//         [field]: {
+//           contains: search,
+//           mode: "insensitive",
+//         },
+//       })),
+//     });
+//   }
+//   if (Object.keys(filterData).length > 0) {
+//     andConditions.push({
+//       AND: Object.keys(filterData).map((key) => {
+//         if (serviceRelationalFields.includes(key)) {
+//           return {
+//             [serviceRelationalFieldsMapper[key]]: {
+//               id: (filterData as any)[key],
+//             },
+//           };
+//         } else if (serviceSearchableFields.includes(key)) {
+//           return {
+//             [key]: {
+//               contains: (filterData as any)[key],
+//               mode: "insensitive",
+//             },
+//           };
+//         } else {
+//           return {
+//             [key]: {
+//               equals: (filterData as any)[key],
+//             },
+//           };
+//         }
+//       }),
+//     });
+//   }
+//   const whereConditions: Prisma.ServiceWhereInput =
+//     andConditions.length > 0 ? { AND: andConditions } : {};
+//   const result = await prisma.service.findMany({
+//     skip,
+//     take: Number(limit),
+//     orderBy: {
+//       [sortBy]: sortOrder,
+//     },
+//     where: whereConditions,
+//   });
+//   const total = await prisma.service.count({
+//     where: whereConditions,
+//   });
+//   const totalPages = Math.ceil(total / Number(limit));
+//   return {
+//     meta: {
+//       total,
+//       page,
+//       limit,
+//       totalPages,
+//     },
+//     data: result,
+//   };
+// };
+const getAllservices = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.service.findMany();
+    return result;
 });
 // const getAllservices = async (
 //   filters: IServiceFilterRequest,

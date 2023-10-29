@@ -21,7 +21,12 @@ const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getAllFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.userReview.findMany();
+    // Use Prisma to fetch UserReview records and include the related user information
+    const result = yield prisma_1.default.userReview.findMany({
+        include: {
+            user: true, // This includes the related user information
+        },
+    });
     return result;
 });
 const getreviewsById = (id) => __awaiter(void 0, void 0, void 0, function* () {

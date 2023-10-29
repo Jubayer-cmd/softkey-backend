@@ -9,7 +9,7 @@ const common_1 = require("../../../interface/common");
 const auth_1 = __importDefault(require("../../middleware/auth"));
 const service_controller_1 = require("./service.controller");
 const router = express_1.default.Router();
-router.post("/services/create-service", (0, auth_1.default)(common_1.ENUM_USER_ROLE.ADMIN), service_controller_1.serviceController.insertIntoDB);
+router.post("/services/create-service", service_controller_1.serviceController.insertIntoDB);
 router.get("/services", service_controller_1.serviceController.getservices);
 router.get("/services/:id", service_controller_1.serviceController.getUserById);
 router.delete("/services/:id", (0, auth_1.default)(common_1.ENUM_USER_ROLE.ADMIN), service_controller_1.serviceController.deleteFromDB);

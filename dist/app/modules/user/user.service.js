@@ -24,10 +24,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+const paginationHelper_1 = require("../../../utils/paginationHelper");
 const prisma_1 = __importDefault(require("../../../utils/prisma"));
-const getAllFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.user.findMany();
-    return result;
+const user_interface_1 = require("./user.interface");
+const getAllUser = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
+    const { limit, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
+    const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
+    const andConditions = [];
+    if (searchTerm) {
+        andConditions.push({
+            OR: user_interface_1.userSearchableFields.map((field) => ({
+                [field]: {
+                    contains: searchTerm,
+                    mode: "insensitive",
+                },
+            })),
+        });
+    }
+    if (Object.keys(filterData).length > 0) {
+        andConditions.push({
+            AND: Object.keys(filterData).map((key) => ({
+                [key]: {
+                    equals: filterData[key],
+                },
+            })),
+        });
+    }
+    const whereConditions = andConditions.length > 0 ? { AND: andConditions } : {};
+    const result = yield prisma_1.default.user.findMany({
+        where: whereConditions,
+        skip,
+        take: limit,
+    });
+    const total = yield prisma_1.default.user.count({
+        where: whereConditions,
+    });
+    const totalPages = Math.ceil(total / Number(limit));
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+            totalPages,
+        },
+        data: result,
+    };
 });
 const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.findUnique({
@@ -64,7 +105,7 @@ const deleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 exports.userService = {
-    getAllFromDb,
+    getAllUser,
     getUserById,
     updateIntoDB,
     deleteFromDB,
