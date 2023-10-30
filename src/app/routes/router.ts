@@ -3,6 +3,7 @@ import { authRoutes } from "../modules/auth/auth.route";
 import { blogsRoutes } from "../modules/blogs/blog.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
 import { categoryRoutes } from "../modules/category/category.route";
+import { orderRoutes } from "../modules/order/order.route";
 import { productRoutes } from "../modules/product/product.route";
 import { reviewsRoutes } from "../modules/reviews/reviews.route";
 import { serviceRoutes } from "../modules/services/service.route";
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: "/",
     route: BookingRoutes,
+  },
+  {
+    path: "/",
+    route: orderRoutes,
   },
 ];
 
