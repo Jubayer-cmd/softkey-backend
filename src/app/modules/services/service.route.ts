@@ -9,11 +9,7 @@ router.post("/services/create-service", serviceController.insertIntoDB);
 router.get("/services", serviceController.getservices);
 router.get("/services/:id", serviceController.getUserById);
 
-router.delete(
-  "/services/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  serviceController.deleteFromDB
-);
+router.delete("/services/:id", serviceController.deleteFromDB);
 
 router.patch(
   "/services/:id",
