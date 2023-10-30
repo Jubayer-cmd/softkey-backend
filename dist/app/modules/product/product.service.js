@@ -34,36 +34,17 @@ const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getAllProducts = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit, page, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(options);
-    const { search, maxPrice, minPrice, category } = filters, filterData = __rest(filters, ["search", "maxPrice", "minPrice", "category"]);
+    const { limit, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
+    const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
     const andConditions = [];
-    if (search) {
+    if (searchTerm) {
         andConditions.push({
             OR: product_constants_1.productSearchableFields.map((field) => ({
                 [field]: {
-                    contains: search,
+                    contains: searchTerm,
                     mode: "insensitive",
                 },
             })),
-        });
-    }
-    if (minPrice !== undefined) {
-        andConditions.push({
-            price: {
-                gte: parseFloat(minPrice.toString()),
-            },
-        });
-    }
-    if (maxPrice !== undefined) {
-        andConditions.push({
-            price: {
-                lte: parseFloat(maxPrice.toString()),
-            },
-        });
-    }
-    if (category) {
-        andConditions.push({
-            categoryId: category,
         });
     }
     if (Object.keys(filterData).length > 0) {
@@ -73,14 +54,6 @@ const getAllProducts = (filters, options) => __awaiter(void 0, void 0, void 0, f
                     return {
                         [product_constants_1.productRelationalFieldsMapper[key]]: {
                             id: filterData[key],
-                        },
-                    };
-                }
-                else if (product_constants_1.productSearchableFields.includes(key)) {
-                    return {
-                        [key]: {
-                            contains: filterData[key],
-                            mode: "insensitive",
                         },
                     };
                 }
@@ -99,23 +72,23 @@ const getAllProducts = (filters, options) => __awaiter(void 0, void 0, void 0, f
         include: {
             Category: true,
         },
-        skip,
-        take: Number(limit),
-        orderBy: {
-            [sortBy]: sortOrder,
-        },
         where: whereConditions,
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder
+            ? { [options.sortBy]: options.sortOrder }
+            : {
+                createdAt: "desc",
+            },
     });
     const total = yield prisma_1.default.product.count({
         where: whereConditions,
     });
-    const totalPages = Math.ceil(total / Number(limit));
     return {
         meta: {
             total,
             page,
             limit,
-            totalPages,
         },
         data: result,
     };

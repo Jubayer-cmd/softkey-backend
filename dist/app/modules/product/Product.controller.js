@@ -20,7 +20,11 @@ const sendResponse_1 = __importDefault(require("../../../utils/sendResponse"));
 const product_constants_1 = require("./product.constants");
 const product_service_1 = require("./product.service");
 const insertIntoDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield product_service_1.productService.insertIntoDB(req.body);
+    const price = parseInt(req.body.price, 10); // Assuming base 10 for decimal numbers
+    const quantity = parseInt(req.body.quantity, 10); // Assuming base 10 for decimal numbers
+    console.log(price, quantity);
+    const result = yield product_service_1.productService.insertIntoDB(Object.assign(Object.assign({}, req.body), { price,
+        quantity }));
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -28,15 +32,15 @@ const insertIntoDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
-// get all products
 const getproducts = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("woooow", req.query);
     const options = (0, pick_1.default)(req.query, ["limit", "page", "sortBy", "sortOrder"]);
     const filters = (0, pick_1.default)(req.query, product_constants_1.productFilterableFields);
     const result = yield product_service_1.productService.getAllProducts(filters, options);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: "products fetched successfully",
+        message: "Books fetched successfully",
         meta: result.meta,
         data: result.data,
     });

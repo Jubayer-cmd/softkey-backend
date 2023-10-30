@@ -7,7 +7,7 @@ exports.userRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
-router.get("/users", user_controller_1.userController.getAllFromDb);
+router.get("/users", user_controller_1.userController.getAllUser);
 router.get("/profile", user_controller_1.userController.getProfile);
 router.get("/users/:id", user_controller_1.userController.getUserById);
 router.delete("/users/:id", user_controller_1.userController.deleteFromDB);
