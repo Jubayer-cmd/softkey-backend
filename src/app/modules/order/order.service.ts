@@ -22,7 +22,7 @@ const createOrder = async (data: Order): Promise<Order> => {
     postcode,
     note,
     phone,
-    orderProduct,
+    orderProduct, // Include orderProduct in the destructuring
   } = data;
 
   try {
