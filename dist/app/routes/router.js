@@ -8,6 +8,7 @@ const auth_route_1 = require("../modules/auth/auth.route");
 const blog_route_1 = require("../modules/blogs/blog.route");
 const booking_route_1 = require("../modules/booking/booking.route");
 const category_route_1 = require("../modules/category/category.route");
+const order_route_1 = require("../modules/order/order.route");
 const product_route_1 = require("../modules/product/product.route");
 const reviews_route_1 = require("../modules/reviews/reviews.route");
 const service_route_1 = require("../modules/services/service.route");
@@ -45,6 +46,10 @@ const moduleRoutes = [
     {
         path: "/",
         route: booking_route_1.BookingRoutes,
+    },
+    {
+        path: "/",
+        route: order_route_1.orderRoutes,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route === null || route === void 0 ? void 0 : route.route));

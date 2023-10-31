@@ -29,7 +29,7 @@ const createOrder = async (data: Order): Promise<Order> => {
     // Begin a transaction
     const order = await prisma.$transaction(async (prisma) => {
       // Create an array of OrderProduct objects with quantity
-      const orderProductData = orderProduct.map((product) => ({
+      const orderProductData = orderProduct.map((product: any) => ({
         create: {
           productId: product.productId,
           quantity: product.quantity, // Include the quantity field
