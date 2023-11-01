@@ -92,6 +92,21 @@ const updateIntoDB = async (
   return result;
 };
 
+const updateRoleToAdmin = async (id: string): Promise<User> => {
+  const payload = {
+    role: "admin", // Define the new role value here
+  };
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: payload as Prisma.UserUpdateInput, // Cast payload to the correct type
+  });
+
+  return updatedUser;
+};
+
 const deleteFromDB = async (id: string): Promise<User> => {
   const result = await prisma.user.delete({
     where: {
@@ -107,4 +122,5 @@ export const userService = {
   updateIntoDB,
   deleteFromDB,
   getSingleUser,
+  updateRoleToAdmin,
 };

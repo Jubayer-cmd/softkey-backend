@@ -30,6 +30,16 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateRoleToAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.updateRoleToAdmin(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User role updated successfully",
+    data: result,
+  });
+});
+
 const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
   const result = await userService.deleteFromDB(req.params.id);
   sendResponse(res, {
@@ -69,4 +79,5 @@ export const userController = {
   updateIntoDB,
   deleteFromDB,
   getProfile,
+  updateRoleToAdmin,
 };
