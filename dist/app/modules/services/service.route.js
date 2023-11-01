@@ -12,6 +12,6 @@ const router = express_1.default.Router();
 router.post("/services/create-service", service_controller_1.serviceController.insertIntoDB);
 router.get("/services", service_controller_1.serviceController.getservices);
 router.get("/services/:id", service_controller_1.serviceController.getUserById);
-router.delete("/services/:id", (0, auth_1.default)(common_1.ENUM_USER_ROLE.ADMIN), service_controller_1.serviceController.deleteFromDB);
+router.delete("/services/:id", service_controller_1.serviceController.deleteFromDB);
 router.patch("/services/:id", (0, auth_1.default)(common_1.ENUM_USER_ROLE.ADMIN), service_controller_1.serviceController.updateIntoDB);
 exports.serviceRoutes = router;
