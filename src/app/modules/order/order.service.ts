@@ -22,7 +22,7 @@ const createOrder = async (data: Order): Promise<Order> => {
     postcode,
     note,
     phone,
-    orderProduct, // Include orderProduct in the destructuring
+    orderProduct,
   } = data;
 
   try {
@@ -30,10 +30,8 @@ const createOrder = async (data: Order): Promise<Order> => {
     const order = await prisma.$transaction(async (prisma) => {
       // Create an array of OrderProduct objects with quantity
       const orderProductData = orderProduct.map((product: any) => ({
-        create: {
-          productId: product.productId,
-          quantity: product.quantity, // Include the quantity field
-        },
+        productId: product.productId,
+        quantity: product.quantity, // Include the quantity field
       }));
 
       // Create the order and associated order products within the transaction
@@ -137,6 +135,13 @@ const getOrderById = async (id: string): Promise<Order | null> => {
   const result = await prisma.order.findUnique({
     where: {
       id,
+    },
+    include: {
+      orderProduct: {
+        include: {
+          product: true, // Include the product information
+        },
+      },
     },
   });
   return result;
