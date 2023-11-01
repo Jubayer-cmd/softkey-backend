@@ -35,6 +35,18 @@ const getOrders: RequestHandler = catchAsync(
   }
 );
 
+const getOrderByUserId: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await orderService.getAllOrdersByUserId(req.params.id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Orders fetched successfully",
+      data: result,
+    });
+  }
+);
+
 const getOrderById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const result = await orderService.getOrderById(req.params.id);
@@ -76,5 +88,6 @@ export const orderController = {
   getOrders,
   getOrderById,
   updateOrder,
+  getOrderByUserId,
   deleteOrder,
 };

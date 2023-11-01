@@ -29,6 +29,18 @@ const getBookings: RequestHandler = catchAsync(
   }
 );
 
+const getBookingByUserId: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await BookingService.getAllBookingsByUserId(req.params.id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Bookings fetched successfully",
+      data: result,
+    });
+  }
+);
+
 const getBookingsById = catchAsync(async (req: Request, res: Response) => {
   const result = await BookingService.getBookingsById(req.params.id);
   sendResponse(res, {
@@ -63,6 +75,7 @@ export const BookingsController = {
   insertIntoDB,
   getBookingsById,
   updateIntoDB,
+  getBookingByUserId,
   deleteFromDB,
   getBookings,
 };

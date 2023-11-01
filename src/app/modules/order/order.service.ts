@@ -22,6 +22,7 @@ const createOrder = async (data: Order): Promise<Order> => {
     postcode,
     note,
     phone,
+    //@ts-ignore
     orderProduct,
   } = data;
 
@@ -133,6 +134,25 @@ const getAllOrders = async (
   };
 };
 
+const getAllOrdersByUserId = async (userId: string): Promise<Order[]> => {
+  const result = await prisma.order.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      orderProduct: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return result;
+};
+
 const getOrderById = async (id: string): Promise<Order | null> => {
   const result = await prisma.order.findUnique({
     where: {
@@ -175,6 +195,7 @@ export const orderService = {
   createOrder,
   getAllOrders,
   getOrderById,
+  getAllOrdersByUserId,
   updateOrder,
   deleteOrder,
 };

@@ -18,6 +18,22 @@ const getAllFromDb = async (): Promise<Booking[]> => {
   return result;
 };
 
+const getAllBookingsByUserId = async (userId: string): Promise<Booking[]> => {
+  const result = await prisma.booking.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      user: true, // This includes the related user information
+      service: true, // This includes the related service information
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return result;
+};
+
 const getBookingsById = async (id: string): Promise<Booking | null> => {
   const result = await prisma.booking.findUnique({
     where: {
@@ -52,6 +68,7 @@ const deleteFromDB = async (id: string): Promise<Booking> => {
 export const BookingService = {
   insertIntoDB,
   getBookingsById,
+  getAllBookingsByUserId,
   updateIntoDB,
   deleteFromDB,
   getAllFromDb,
