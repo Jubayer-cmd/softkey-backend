@@ -22,7 +22,7 @@ const createOrder = async (data: Order): Promise<Order> => {
     postcode,
     note,
     phone,
-    orderProduct, // Include orderProduct in the destructuring
+    orderProduct,
   } = data;
 
   try {
@@ -137,6 +137,13 @@ const getOrderById = async (id: string): Promise<Order | null> => {
   const result = await prisma.order.findUnique({
     where: {
       id,
+    },
+    include: {
+      orderProduct: {
+        include: {
+          product: true, // Include the product information
+        },
+      },
     },
   });
   return result;
