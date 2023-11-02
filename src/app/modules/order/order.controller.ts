@@ -61,6 +61,7 @@ const getOrderById: RequestHandler = catchAsync(
 
 const updateOrder: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
+    console.log("check", req.params.id, req.body);
     const result = await orderService.updateOrder(req.params.id, req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,

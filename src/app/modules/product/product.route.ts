@@ -1,6 +1,4 @@
 import express from "express";
-import { ENUM_USER_ROLE } from "../../../interface/common";
-import auth from "../../middleware/auth";
 import { productController } from "./Product.controller";
 
 const router = express.Router();
@@ -15,10 +13,6 @@ router.get(
 
 router.delete("/products/:id", productController.deleteFromDB);
 
-router.patch(
-  "/products/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  productController.updateIntoDB
-);
+router.patch("/products/:id", productController.updateIntoDB);
 
 export const productRoutes = router;

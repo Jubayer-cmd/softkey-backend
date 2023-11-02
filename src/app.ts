@@ -9,7 +9,7 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://softkey-frontend.vercel.app",
     credentials: true,
   })
 );

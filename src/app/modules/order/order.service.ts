@@ -113,6 +113,13 @@ const getAllOrders = async (
   const result = await prisma.order.findMany({
     // Include related models if needed
     where: whereConditions,
+    include: {
+      orderProduct: {
+        include: {
+          product: true,
+        },
+      },
+    },
     skip,
     take: limit,
     orderBy: {
