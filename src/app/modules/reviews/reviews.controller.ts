@@ -6,12 +6,8 @@ import sendResponse from "../../../utils/sendResponse";
 import { reviewservice } from "./reviews.service";
 
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
-  const rating = parseFloat(req.body.rating);
-  console.log(rating);
-  const result = await reviewservice.insertIntoDB({
-    ...req.body,
-    rating,
-  });
+  console.log(req.body);
+  const result = await reviewservice.insertIntoDB(req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

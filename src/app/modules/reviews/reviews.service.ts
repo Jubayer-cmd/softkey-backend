@@ -2,9 +2,7 @@ import { UserReview } from "@prisma/client";
 import prisma from "../../../utils/prisma";
 
 const insertIntoDB = async (data: UserReview): Promise<UserReview> => {
-  const result = await prisma.userReview.create({
-    data,
-  });
+  const result = await prisma.userReview.create({ data });
   return result;
 };
 
