@@ -1,51 +1,52 @@
-import express from "express";
-import { authRoutes } from "../modules/auth/auth.route";
-import { blogsRoutes } from "../modules/blogs/blog.route";
-import { BookingRoutes } from "../modules/booking/booking.route";
-import { categoryRoutes } from "../modules/category/category.route";
-import { orderRoutes } from "../modules/order/order.route";
-import { productRoutes } from "../modules/product/product.route";
-import { reviewsRoutes } from "../modules/reviews/reviews.route";
-import { serviceRoutes } from "../modules/services/service.route";
-import { userRoutes } from "../modules/user/user.routes";
+import express from 'express';
+
+import { blogsRoutes } from '../modules/blogs/blog.route';
+import { BookingRoutes } from '../modules/booking/booking.route';
+import { categoryRoutes } from '../modules/category/category.route';
+import { orderRoutes } from '../modules/order/order.route';
+import { productRoutes } from '../modules/product/product.route';
+import { reviewsRoutes } from '../modules/reviews/reviews.route';
+import { serviceRoutes } from '../modules/services/service.route';
+import { userRoutes } from '../modules/user/user.routes';
+import { authRoutes } from '../modules/authentication/auth.route';
 
 const router = express.Router();
 
 const moduleRoutes = [
   {
-    path: "/",
+    path: '/auth',
     route: authRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: userRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: categoryRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: blogsRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: serviceRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: productRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: reviewsRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: BookingRoutes,
   },
   {
-    path: "/",
+    path: '/',
     route: orderRoutes,
   },
 ];
